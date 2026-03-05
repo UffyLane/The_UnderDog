@@ -1,7 +1,3 @@
-import {
-  TICKETMASTER_BASE_URL,
-  TICKETMASTER_API_KEY,
-} from "./constants";
 
 export function searchEvents(artist) {
   return fetch(`${import.meta.env.VITE_API_URL}/events?artist=${artist}`)

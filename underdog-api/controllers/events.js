@@ -1,20 +1,28 @@
 const axios = require('axios');
-const { TICKETMASTER_KEY } = require('../utils/config');
 
-const searchEvents = (req, res, next) => {
-  const { artist } = req.query;
+const { TICKETMASTER_API_KEY } = process.env;
 
-  axios
-    .get('https://app.ticketmaster.com/discovery/v2/events.json', {
+const BASE_URL = 'https://app.ticketmaster.com/discovery/v2/events.json';
+
+const searchEvents = async (req, res, next) => {
+  try {
+    const { artist } = req.query;
+
+    if (!artist) {
+      return res.status(400).send({ message: 'Artist query required' });
+    }
+
+    const response = await axios.get(BASE_URL, {
       params: {
         keyword: artist,
-        apikey: TICKETMASTER_KEY,
+        apikey: TICKETMASTER_API_KEY,
       },
-    })
-    .then((response) => {
-      res.send(response.data);
-    })
-    .catch(next);
+    });
+
+    res.send(response.data);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = { searchEvents };
