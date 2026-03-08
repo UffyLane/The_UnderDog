@@ -64,6 +64,7 @@ const getCurrentUser = (req, res, next) => {
         throw new NotFoundError('User not found');
       }
       res.send({
+        _id: user._id,
         name: user.name,
         email: user.email,
         createdAt: user.createdAt, // requires timestamps: true in schema

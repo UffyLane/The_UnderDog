@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 
 const { TICKETMASTER_API_KEY } = process.env;
 
@@ -12,16 +12,21 @@ const searchEvents = async (req, res, next) => {
       return res.status(400).send({ message: 'Artist query required' });
     }
 
+    if (!TICKETMASTER_API_KEY) {
+      return res.status(500).send({ message: 'Ticketmaster API key is missing on server' });
+    }
+
     const response = await axios.get(BASE_URL, {
       params: {
         keyword: artist,
         apikey: TICKETMASTER_API_KEY,
+        size: 20,
       },
     });
 
-    res.send(response.data);
+    return res.send(response.data);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 

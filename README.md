@@ -9,14 +9,6 @@ The application integrates with the Ticketmaster Discovery API and includes a se
 
 ---
 
-## Live Demo
-
-Coming soon
-
----
-
-## Screenshots
-
 ### Home Search
 Users can search for artists and view upcoming Midwest events.
 
@@ -169,7 +161,7 @@ Create a `.env` file:
 
 VITE_API_URL=http://localhost:3000
 
-VITE_TICKETMASTER_KEY=your_ticketmaster_api_key
+VITE_TICKETMASTER_KEY=
 
 
 Start the frontend:
@@ -231,8 +223,6 @@ DELETE /items/:itemId
 - Personalized recommendations
 - Event calendar view
 - Mobile-optimized UI
-
----
 
 ## Author
 
