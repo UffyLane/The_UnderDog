@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 
-
 const routes = require('./routes');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -14,14 +13,25 @@ const { PORT, MONGO_URI, NODE_ENV } = require('./utils/config');
 
 const app = express();
 
-app.use(helmet());
-const corsOptions = {
-  origin: NODE_ENV === 'production'
-    ? 'https://your-frontend-domain.com'
-    : 'http://localhost:5173',
-};
+const allowedOrigins =
+  NODE_ENV === 'production'
+    ? ['https://the-under-dog.vercel.app']
+    : ['http://localhost:5173'];
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
+  })
+);
+
+app.use(helmet());
 app.use(express.json());
 
 app.use(requestLogger);
