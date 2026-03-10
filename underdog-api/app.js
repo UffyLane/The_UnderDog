@@ -9,27 +9,19 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const rateLimiter = require('./middlewares/rateLimiter');
 const errorHandler = require('./middlewares/errorHandler');
 
-const { PORT, MONGO_URI, NODE_ENV } = require('./utils/config');
+const { PORT, MONGO_URI } = require('./utils/config');
 
 const app = express();
 
-const allowedOrigins =
-  NODE_ENV === 'production'
-    ? ['https://the-under-dog.vercel.app']
-    : ['http://localhost:5173'];
-
 app.use(
   cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error('Not allowed by CORS'));
-    },
+    origin: true,
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+app.options('*', cors());
 
 app.use(helmet());
 app.use(express.json());
@@ -52,5 +44,5 @@ app.use(errorLogger);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.warn(`✅ UnderDog API listening on http://localhost:${PORT}`);
+  console.warn(`✅ UnderDog API listening on port ${PORT}`);
 });
