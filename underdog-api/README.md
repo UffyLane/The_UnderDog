@@ -168,6 +168,8 @@ Social event sharing
 
 Artist tracking notifications
 
+Deployment: https://the-underdog.onrender.com
+
 ## Project Pitch Video
  
  Check out [this video](https://www.loom.com/share/c75047e549214543a6d6e4465de6192d), where I describe my 

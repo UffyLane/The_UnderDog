@@ -40,9 +40,10 @@ mongoose
 app.use(routes);
 
 // 404 handler
-app.use((req, res) => {
-  res.status(404).send({ message: 'Requested resource not found' });
+app.use((req, res) => {res.status(404).send({statusCode: 404,
+  message: 'Requested resource not found',
 });
+})
 
 // Error logging
 app.use(errorLogger);
