@@ -1,9 +1,4 @@
 
----
-
-# Frontend README 
-
-```markdown
 # The UnderDog Frontend
 
 The frontend for **The UnderDog**, a web application that helps users discover live music events in the Midwest and save their favorites.
@@ -121,6 +116,14 @@ Spotify/Tidal integration
 Notifications for upcoming concerts
 
 Event calendar view
+
+
+Deployment: https://the-under-dog.vercel.app
+
+## Project Pitch Video
+ 
+ Check out [this video](https://www.loom.com/share/f65c7d924f924c33b11100656eeff1c7), where I describe my 
+ project and some challenges I faced while building it.
 
 Author
 
