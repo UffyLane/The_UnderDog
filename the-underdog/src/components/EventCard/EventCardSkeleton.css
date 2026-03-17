@@ -1,0 +1,80 @@
+/* src/components/EventCard/EventCardSkeleton.css */
+.event-skel {
+  border-radius: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+}
+
+.event-skel__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.event-skel__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-skel__line,
+.event-skel__pill,
+.event-skel__btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.event-skel__line {
+  height: 14px;
+  margin-bottom: 10px;
+  width: 70%;
+}
+
+.event-skel__line_title {
+  height: 22px;
+  width: 55%;
+}
+
+.event-skel__line_short {
+  width: 40%;
+}
+
+.event-skel__pill {
+  width: 74px;
+  height: 38px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.event-skel__btn {
+  height: 44px;
+  margin-top: 14px;
+  border-radius: 14px;
+}
+
+/* shimmer */
+.event-skel__line::after,
+.event-skel__pill::after,
+.event-skel__btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.08),
+    transparent
+  );
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}

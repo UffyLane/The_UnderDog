@@ -1,0 +1,8 @@
+.loader {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(233, 238, 245, 0.85);
+}
