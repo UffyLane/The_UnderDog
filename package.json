@@ -1,0 +1,16 @@
+{
+  "name": "the-underdog",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install --prefix the-underdog && npm install --prefix underdog-api",
+    "dev": "concurrently \"npm run dev --prefix underdog-api\" \"npm run dev --prefix the-underdog\"",
+    "start": "npm run start --prefix underdog-api",
+    "build": "npm run build --prefix the-underdog"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "axios": "^1.13.6",
+    "mongodb": "^7.1.0"
+  }
+}

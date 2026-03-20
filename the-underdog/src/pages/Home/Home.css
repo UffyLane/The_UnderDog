@@ -1,0 +1,119 @@
+.home {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* HERO */
+.home__hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(900px 220px at 20% 0%, rgba(120, 88, 255, 0.35), transparent 60%),
+    radial-gradient(700px 220px at 80% 20%, rgba(0, 214, 255, 0.25), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.home__hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'%3E%3Cpath d='M0 40h240M0 120h240M0 200h240'/%3E%3Cpath d='M40 0v240M120 0v240M200 0v240'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.home__hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: 26px 18px;
+}
+
+.home__title {
+  margin: 0 0 10px;
+  font-size: 44px;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.home__subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(233, 238, 245, 0.8);
+}
+
+/* PANEL */
+.home__panel {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (min-width: 768px) {
+  .home__hero-inner {
+    padding: 34px 24px;
+  }
+
+  .home__title {
+    font-size: 56px;
+  }
+
+  .home__panel {
+    padding: 20px;
+  }
+}
+
+/* EMPTY + RESULTS HEADER */
+.home__empty {
+  margin: 18px 0 0;
+  padding: 14px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(233, 238, 245, 0.88);
+}
+
+.home__artist {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.home__results {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home__results-title {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.home__results-subtitle {
+  margin: 6px 0 0;
+  color: rgba(233, 238, 245, 0.72);
+  font-size: 14px;
+}
+
+.home__search-sticky {
+  position: sticky;
+  top: 72px; /* header height buffer */
+  z-index: 20; 
+
+  margin-bottom: 18px;
+
+  /* makes it feel like a floating bar */
+  background: rgba(11, 13, 16, 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+}
+
+.home__search-sticky > * {
+  margin: 0;
+}
