@@ -2,8 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
+const userRouter = require('./routes/users');
+const eventRouter = require('./routes/events');
 
 const routes = require('./routes');
+const musicRouter = require('./routes/music');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const rateLimiter = require('./middlewares/rateLimiter');
@@ -12,7 +15,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const { PORT, MONGO_URI } = require('./utils/config');
 
 const app = express();
-
+app.use('/music', musicRouter);
 // CORS
 app.use(
   cors({
@@ -38,6 +41,8 @@ mongoose
 
 // Routes
 app.use(routes);
+app.use('/users', userRouter);
+app.use('/events', eventRouter);
 
 // 404 handler
 app.use((req, res) => {res.status(404).send({statusCode: 404,
