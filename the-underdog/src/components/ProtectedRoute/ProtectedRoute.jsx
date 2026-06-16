@@ -1,21 +1,24 @@
-import { useEffect } from "react";
+import { createElement, useEffect } from "react";
 import { Route, Redirect } from "react-router-dom";
 
 export default function ProtectedRoute({
-  component,
+  component: Component,
   loggedIn,
+  isCheckingAuth = false,
   onUnauthorized,
   ...routeProps
 }) {
   useEffect(() => {
-    if (!loggedIn && onUnauthorized) onUnauthorized();
-  }, [loggedIn, onUnauthorized]);
+    if (!isCheckingAuth && !loggedIn && onUnauthorized) onUnauthorized();
+  }, [isCheckingAuth, loggedIn, onUnauthorized]);
 
   return (
     <Route
       {...routeProps}
-      component={component}
-      render={(props) => (loggedIn ? <component {...props} /> : <Redirect to="/" />)}
+      render={(props) => {
+        if (isCheckingAuth) return null;
+        return loggedIn ? createElement(Component, props) : <Redirect to="/" />;
+      }}
     />
   );
 }

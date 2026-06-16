@@ -68,6 +68,7 @@ src
 git clone https://github.com/yourusername/underdog
 cd frontend
 npm install
+npm run install-all
 Environment Variables
 
 Create a .env file:

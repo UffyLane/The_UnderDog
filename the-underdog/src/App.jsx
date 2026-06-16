@@ -9,7 +9,7 @@ import Profile from "./pages/Profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AuthModal from "./components/AuthModal/AuthModal";
 
-import { ToastProvider} from "./components/Toast/ToastProvider";
+import { ToastProvider } from "./components/Toast/ToastProvider";
 import { useToast } from "./components/Toast/ToastContext";
 import { searchEvents } from "./utils/api";
 import { MIDWEST_STATES } from "./utils/constants";
@@ -32,6 +32,9 @@ function AppInner() {
   // ===== Auth =====
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(() =>
+    Boolean(localStorage.getItem("jwt"))
+  );
 
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState("signin");
@@ -141,6 +144,9 @@ function AppInner() {
         setCurrentUser(null);
         setLoggedIn(false);
         setSavedEvents([]);
+      })
+      .finally(() => {
+        setIsCheckingAuth(false);
       });
   }, []);
 
@@ -285,6 +291,7 @@ function AppInner() {
             <ProtectedRoute
               path="/profile"
               loggedIn={loggedIn}
+              isCheckingAuth={isCheckingAuth}
               onUnauthorized={handleUnauthorized}
               component={() => (
                 <Profile
@@ -302,7 +309,9 @@ function AppInner() {
           isOpen={isAuthOpen}
           mode={authMode}
           onClose={closeAuth}
-          onSwitchMode={() => setAuthMode((m) => (m === "signin" ? "signup" : "signin"))}
+          onSwitchMode={() =>
+            setAuthMode((mode) => (mode === "signin" ? "signup" : "signin"))
+          }
           onSubmit={handleAuthSubmit}
           errorMessage={authError}
           successMessage={authSuccess}

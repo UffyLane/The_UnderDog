@@ -56,5 +56,19 @@
   font-weight: 800;
 }
 
+.auth__success,
+.auth__error {
+  margin: 0;
+  font-weight: 800;
+}
+
+.auth__success {
+  color: #16a34a;
+}
+
+.auth__error {
+  color: #dc2626;
+}
+
 .auth__msg_success { color: #16a34a; }
 .auth__msg_error { color: #dc2626; }

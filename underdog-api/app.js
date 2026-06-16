@@ -2,8 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
-const userRouter = require('./routes/users');
-const eventRouter = require('./routes/events');
 
 const routes = require('./routes');
 const musicRouter = require('./routes/music');
@@ -15,7 +13,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const { PORT, MONGO_URI } = require('./utils/config');
 
 const app = express();
-app.use('/music', musicRouter);
+
 // CORS
 app.use(
   cors({
@@ -40,15 +38,16 @@ mongoose
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
 // Routes
+app.use('/music', musicRouter);
 app.use(routes);
-app.use('/users', userRouter);
-app.use('/events', eventRouter);
 
 // 404 handler
-app.use((req, res) => {res.status(404).send({statusCode: 404,
-  message: 'Requested resource not found',
+app.use((req, res) => {
+  res.status(404).send({
+    statusCode: 404,
+    message: 'Requested resource not found',
+  });
 });
-})
 
 // Error logging
 app.use(errorLogger);
