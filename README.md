@@ -1,235 +1,170 @@
 
 # The UnderDog
 
-The UnderDog is a full-stack web application designed to help music fans discover live concerts across the Midwest and track events from their favorite artists.
+> **Find Midwest shows for the artists you love.**
 
-Users can search for artists, browse upcoming shows, and save events to a personal dashboard for easy access.
-
-The application integrates with the Ticketmaster Discovery API and includes a secure backend with authentication, event persistence, and user profile management.
+🎵 **[Live Demo](https://the-under-dog.vercel.app)** | 📦 **[Backend API](https://github.com/UffyLane/The_UnderDog/tree/main/underdog-api)**
 
 ---
 
-### Home Search
-Users can search for artists and view upcoming Midwest events.
+## Why I Built This
 
-### Event Results
-Events are displayed with venue, location, and ticket links.
+Most concert discovery apps — BandsInTown, Songkick — are built on the same two APIs: Spotify and YouTube. Big artists, big platforms, big venues.
 
-### Profile Dashboard
-Users can manage saved events and view their account information.
+The UnderDog is built differently. Instead of the usual suspects, it integrates with **Ticketmaster**, **SoundCloud**, and **Tidal** — platforms that surface artists the algorithm doesn't always push to the top. The goal is to help Midwest music fans find shows from artists they actually follow, not just the ones with the biggest marketing budgets.
+
+---
+
+## Try It
+
+**Live app:** https://the-under-dog.vercel.app
+
+Test credentials:
+- **Email:** test@underdog.com
+- **Password:** Test1234!
+
+Search for any artist (e.g. "Radiohead", "SZA", "Logic") to see Midwest events pulled from Ticketmaster.
 
 ---
 
 ## Features
 
-### Artist Search
-Search for artists using the Ticketmaster Discovery API.
-
-### Midwest Event Filtering
-Events are filtered to Midwest states for more relevant results.
-
-### Authentication
-Users can securely sign up and log in using JWT authentication.
-
-### Save Events
-Authenticated users can save concerts to their personal dashboard.
-
-### Profile Dashboard
-Users can manage saved events and track their activity.
-
-### Secure API
-The backend includes request validation, rate limiting, logging, and centralized error handling.
-
----
-
-## Architecture
-
-
-Frontend (React + Vite)
-│
-│ REST API
-▼
-Backend (Node.js + Express)
-│
-│
-▼
-MongoDB Database
-
-
-The application follows a typical **client-server architecture**:
-
-* React frontend for UI
-* Express backend API
-* MongoDB database for persistence
-* Ticketmaster API for event discovery
+- **Artist search** — powered by the Ticketmaster Discovery API
+- **Midwest filtering** — results scoped to IL, OH, MI, IN, WI, MN, MO, IA, KS, NE
+- **Authentication** — secure sign up / log in with JWT
+- **Save events** — authenticated users can save concerts to their profile dashboard
+- **Protected routes** — unauthenticated users are redirected to sign in
+- **Toast notifications** — real-time feedback for user actions
+- **Skeleton loaders** — smooth loading states while fetching events
 
 ---
 
 ## Tech Stack
 
-### Frontend
-
-- React
-- Vite
-- React Router
-- Context API
+**Frontend**
+- React + Vite
+- React Router v6
+- Context API (global auth state)
 - CSS Modules
-- Ticketmaster API
 
-### Backend
-
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT Authentication
-- Celebrate / Joi validation
-- Winston logging
-- Helmet security
+**Backend**
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT authentication
+- bcrypt password hashing
+- Celebrate / Joi request validation
+- Winston request + error logging
+- Helmet security headers
 - Rate limiting
+
+**APIs**
+- Ticketmaster Discovery API (active)
+- SoundCloud API (in progress)
+- Tidal API (in progress)
 
 ---
 
 ## Project Structure
 
-
-underdog
+```
+THE_UNDERDOG/
 │
-├── frontend
-│ ├── src
-│ ├── public
-│ └── README.md
+├── the-underdog/          # React frontend
+│   ├── src/
+│   │   ├── components/    # AuthModal, EventCard, Header, SearchForm, Toast...
+│   │   ├── pages/         # Home, Profile
+│   │   ├── contexts/      # CurrentUserContext
+│   │   └── utils/         # api.js, auth.js, apiClient.js
+│   └── vite.config.js
 │
-├── backend
-│ ├── controllers
-│ ├── models
-│ ├── routes
-│ ├── middlewares
-│ ├── utils
-│ └── README.md
-│
-└── README.md
-
+└── underdog-api/          # Express backend
+    ├── controllers/       # users, events, items, music
+    ├── models/            # User, Item (Mongoose schemas)
+    ├── routes/            # index, users, events, items, music
+    ├── middlewares/       # auth, validate, errorHandler, logger, rateLimiter
+    ├── errors/            # Custom error classes (400, 401, 403, 404, 409)
+    └── utils/             # config, soundcloudApi, tidalApi
+```
 
 ---
 
-## Installation
+## Running Locally
 
-Clone the repository.
+**Clone the repo**
+```bash
+git clone https://github.com/UffyLane/The_UnderDog.git
+cd The_UnderDog
+```
 
-
-git clone https://github.com/yourusername/underdog.git
-
-cd underdog
-
-
----
-
-### Backend Setup
-
-
-cd backend
+**Backend**
+```bash
+cd underdog-api
 npm install
+```
 
-
-Create a `.env` file:
-
-
+Create `.env`:
+```
 PORT=3000
 MONGO_URI=mongodb://127.0.0.1:27017/underdog_db
-JWT_SECRET=your_secret
+JWT_SECRET=your_jwt_secret
 NODE_ENV=development
+```
 
-
-Start the backend server:
-
-
+```bash
 npm run dev
+```
 
-
----
-
-### Frontend Setup
-
-
-cd frontend
+**Frontend**
+```bash
+cd the-underdog
 npm install
+```
 
-
-Create a `.env` file:
-
-
+Create `.env`:
+```
 VITE_API_URL=http://localhost:3000
+VITE_TICKETMASTER_KEY=your_ticketmaster_key
+```
 
-VITE_TICKETMASTER_KEY=
-
-
-Start the frontend:
-
-
+```bash
 npm run dev
-
-
-The application will run at:
-
-
-http://localhost:5173
-
+# runs at http://localhost:5173
+```
 
 ---
 
-## API Overview
+## API Endpoints
 
-### Authentication
-
-
-POST /signup
-POST /signin
-
-
-### Current User
-
-
-GET /users/me
-
-
-### Saved Events
-
-
-GET /items
-POST /items
-DELETE /items/:itemId
-
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/signup` | No | Create account |
+| POST | `/signin` | No | Log in, receive JWT |
+| GET | `/users/me` | Yes | Get current user |
+| GET | `/items` | Yes | Get saved events |
+| POST | `/items` | Yes | Save an event |
+| DELETE | `/items/:itemId` | Yes | Remove saved event |
 
 ---
 
-## Security Features
+## Roadmap
 
-- JWT authentication
-- Password hashing with bcrypt
-- Request validation with Celebrate
-- Rate limiting
-- Helmet security headers
-- Request and error logging
-- Centralized error handling
+- [ ] SoundCloud API integration — surface independent artists
+- [ ] Tidal API integration — high-fidelity artist discovery
+- [ ] Artist following system
+- [ ] Personalized event feed based on saved artists
+- [ ] Concert notifications
+- [ ] Mobile-optimized UI
+- [ ] Event calendar view
 
 ---
-
-## Future Improvements
-
-- Artist following system
-- Concert notifications
-- Spotify or Tidal integration
-- Personalized recommendations
-- Event calendar view
-- Mobile-optimized UI
 
 ## Author
 
-Stuart G Clark Jr
+**Stuart G. Clark Jr.**
+[GitHub](https://github.com/UffyLane)
 
 ---
 
 ## License
 
-This project is open source and available under the MIT License.
+MIT
