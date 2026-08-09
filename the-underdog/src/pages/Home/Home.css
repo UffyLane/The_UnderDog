@@ -117,3 +117,20 @@
 .home__search-sticky > * {
   margin: 0;
 }
+
+.home__results_tracks {
+  margin-top: 26px;
+}
+
+.track-skeleton {
+  height: 94px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

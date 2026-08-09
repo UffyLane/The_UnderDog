@@ -11,7 +11,7 @@ import AuthModal from "./components/AuthModal/AuthModal";
 
 import { ToastProvider } from "./components/Toast/ToastProvider";
 import { useToast } from "./components/Toast/ToastContext";
-import { searchEvents } from "./utils/api";
+import { searchEvents, searchMusic } from "./utils/api";
 import { MIDWEST_STATES } from "./utils/constants";
 
 import CurrentUserContext from "./contexts/CurrentUserContext";
@@ -28,6 +28,10 @@ function AppInner() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // ===== Independent artist tracks (SoundCloud / TIDAL) =====
+  const [tracks, setTracks] = useState([]);
+  const [isTracksLoading, setIsTracksLoading] = useState(false);
 
   // ===== Auth =====
   const [loggedIn, setLoggedIn] = useState(false);
@@ -60,11 +64,14 @@ function AppInner() {
       setEvents([]);
       setIsLoading(false);
       setErrorMessage("");
+      setTracks([]);
+      setIsTracksLoading(false);
       return;
     }
 
     setIsLoading(true);
     setErrorMessage("");
+    setIsTracksLoading(true);
   };
 
   useEffect(() => {
@@ -80,6 +87,17 @@ function AppInner() {
         setErrorMessage("Could not load events. Try again.");
       })
       .finally(() => setIsLoading(false));
+  }, [artistName]);
+
+  // Independent artist tracks are a bonus surface, not the primary result —
+  // fail silently (empty list) rather than showing an error banner.
+  useEffect(() => {
+    if (!artistName) return;
+
+    searchMusic(artistName)
+      .then((results) => setTracks(Array.isArray(results) ? results : []))
+      .catch(() => setTracks([]))
+      .finally(() => setIsTracksLoading(false));
   }, [artistName]);
 
   // ===== Helpers =====
@@ -285,6 +303,8 @@ function AppInner() {
                 onUnsaveEvent={onUnsaveEvent}
                 savingKey={savingKey}
                 makeEventKey={makeEventKey}
+                tracks={tracks}
+                isTracksLoading={isTracksLoading}
               />
             </Route>
 

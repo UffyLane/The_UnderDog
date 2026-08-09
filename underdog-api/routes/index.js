@@ -8,6 +8,7 @@ const { createUser, login } = require('../controllers/users');
 const userRoutes = require('./users');
 const itemRoutes = require('./items');
 const eventsRoutes = require('./events');
+const musicRoutes = require('./music');
 
 router.get('/health', (_req, res) => {
   res.status(200).send({ status: 'ok' });
@@ -17,6 +18,7 @@ router.get('/health', (_req, res) => {
 router.post('/signup', validateSignup, createUser);
 router.post('/signin', validateSignin, login);
 router.use('/events', eventsRoutes);
+router.use('/music', musicRoutes);
 
 // Protect everything after this
 router.use(auth);

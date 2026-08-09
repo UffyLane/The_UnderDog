@@ -1,6 +1,7 @@
 // src/pages/Home/Home.jsx
 import SearchForm from "../../components/SearchForm/SearchForm";
 import EventList from "../../components/EventList/EventList";
+import TrackList from "../../components/TrackList/TrackList";
 import ErrorBanner from "../../components/ErrorBanner/ErrorBanner";
 import EventCardSkeleton from "../../components/EventCard/EventCardSkeleton";
 import "./Home.css";
@@ -19,6 +20,10 @@ export default function Home({
   onRequireAuth,
   savingKey,
   makeEventKey,
+
+  // independent artist tracks (SoundCloud / TIDAL)
+  tracks,
+  isTracksLoading,
 }) {
   const showEmpty =
     artistName &&
@@ -84,6 +89,26 @@ export default function Home({
             savingKey={savingKey}
             makeEventKey={makeEventKey}
           />
+        )}
+
+        {artistName && (isTracksLoading || (tracks && tracks.length > 0)) && (
+          <div className="home__results home__results_tracks">
+            <h2 className="home__results-title">Independent artist picks</h2>
+            <p className="home__results-subtitle">
+              Tracks from SoundCloud &amp; TIDAL that the algorithm doesn&apos;t
+              always surface.
+            </p>
+
+            {isTracksLoading ? (
+              <ul className="track-list">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <li key={i} className="track track-skeleton" />
+                ))}
+              </ul>
+            ) : (
+              <TrackList tracks={tracks} />
+            )}
+          </div>
         )}
       </div>
     </section>

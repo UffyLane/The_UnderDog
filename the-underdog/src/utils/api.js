@@ -7,6 +7,13 @@ export const searchEvents = (artist) => {
   return request(`${BASE_URL}/events?artist=${encodedArtist}`);
 };
 
+// Hits /music/search, which queries SoundCloud + Tidal in parallel and
+// gracefully drops whichever source fails (e.g. Tidal creds not yet live).
+export const searchMusic = (query) => {
+  const encodedQuery = encodeURIComponent((query || "").trim());
+  return request(`${BASE_URL}/music/search?query=${encodedQuery}`);
+};
+
 const authHeaders = (token) => ({
   Authorization: `Bearer ${token}`,
 });
