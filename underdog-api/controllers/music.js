@@ -33,6 +33,7 @@ const searchTidal = async (req, res, next) => {
 
     return res.status(200).send(results);
   } catch (err) {
+    console.error('TIDAL search failed:', err.message); // eslint-disable-line no-console
     return next(err);
   }
 };
