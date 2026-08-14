@@ -46,6 +46,18 @@ const getTidalToken = async () => {
   return cachedToken;
 };
 
+// TIDAL durations are ISO 8601 (e.g. "PT3M59S"), not milliseconds.
+// Convert to ms so the frontend's single formatDuration() works for both sources.
+const parseIsoDurationToMs = (iso) => {
+  if (!iso) return null;
+  const match = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(iso);
+  if (!match) return null;
+  const [, hours, minutes, seconds] = match;
+  const totalSeconds =
+    (Number(hours) || 0) * 3600 + (Number(minutes) || 0) * 60 + (Number(seconds) || 0);
+  return totalSeconds * 1000;
+};
+
 // This function searches TIDAL catalog data.
 const searchTidalTracks = async (query) => {
   const token = await getTidalToken();
@@ -53,7 +65,7 @@ const searchTidalTracks = async (query) => {
   const params = new URLSearchParams({
     'filter[query]': query,
     countryCode: 'US',
-    include: 'tracks',
+    include: 'tracks,tracks.artists',
   });
 
   const response = await fetch(`https://openapi.tidal.com/v2/searchResults?${params}`, {
@@ -70,23 +82,35 @@ const searchTidalTracks = async (query) => {
   }
 
   const data = await response.json();
+  const included = data?.included || [];
 
-  // TIDAL response shapes can vary depending on endpoint/version.
-  // This keeps the app from crashing while we confirm the exact payload.
-  const tracks =
-    data?.included?.filter((item) => item.type === 'tracks') ||
-    data?.data?.relationships?.tracks?.data ||
-    [];
+  const tracks = included.filter((item) => item.type === 'tracks');
 
-  return tracks.map((track) => ({
-    source: 'tidal',
-    externalId: track.id,
-    title: track.attributes?.title || 'Unknown title',
-    artist: track.attributes?.artistName || 'Unknown artist',
-    artworkUrl: null,
-    trackUrl: null,
-    duration: track.attributes?.duration || null,
-  }));
+  // Artists come back as separate included resources; build a lookup so we
+  // can resolve each track's artist relationship to an actual name.
+  const artistsById = included
+    .filter((item) => item.type === 'artists')
+    .reduce((map, artist) => {
+      map[artist.id] = artist.attributes?.name;
+      return map;
+    }, {});
+
+  return tracks.map((track) => {
+    const artistRefs = track.relationships?.artists?.data || [];
+    const artistNames = artistRefs
+      .map((ref) => artistsById[ref.id])
+      .filter(Boolean);
+
+    return {
+      source: 'tidal',
+      externalId: track.id,
+      title: track.attributes?.title || 'Unknown title',
+      artist: artistNames.length > 0 ? artistNames.join(', ') : 'Unknown artist',
+      artworkUrl: null,
+      trackUrl: `https://tidal.com/browse/track/${track.id}`,
+      duration: parseIsoDurationToMs(track.attributes?.duration),
+    };
+  });
 };
 
 module.exports = {
