@@ -51,14 +51,13 @@ const searchTidalTracks = async (query) => {
   const token = await getTidalToken();
 
   const params = new URLSearchParams({
-    query,
     countryCode: 'US',
-    limit: '10',
+    include: 'tracks',
   });
 
   const response = await fetch(`https://openapi.tidal.com/v2/searchresults/${encodeURIComponent(query)}?${params}`, {
     headers: {
-      Accept: 'application/vnd.tidal.v1+json',
+      Accept: 'application/vnd.api+json',
       Authorization: `Bearer ${token}`,
     },
     signal: AbortSignal.timeout(8000),
