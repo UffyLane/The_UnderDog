@@ -58,6 +58,21 @@ const parseIsoDurationToMs = (iso) => {
   return totalSeconds * 1000;
 };
 
+// Artwork resources expose multiple image sizes via attributes.files[].
+// Pick the file closest to a target width (falls back to whatever's available).
+const pickArtworkUrl = (artwork, targetWidth = 300) => {
+  const files = artwork?.attributes?.files || [];
+  if (files.length === 0) return null;
+
+  const closest = files.reduce((best, file) => {
+    const width = file.meta?.width ?? 0;
+    const bestWidth = best.meta?.width ?? 0;
+    return Math.abs(width - targetWidth) < Math.abs(bestWidth - targetWidth) ? file : best;
+  }, files[0]);
+
+  return closest.href || null;
+};
+
 // This function searches TIDAL catalog data.
 const searchTidalTracks = async (query) => {
   const token = await getTidalToken();
@@ -65,7 +80,7 @@ const searchTidalTracks = async (query) => {
   const params = new URLSearchParams({
     'filter[query]': query,
     countryCode: 'US',
-    include: 'tracks,tracks.artists',
+    include: 'tracks,tracks.artists,tracks.albums,tracks.albums.coverArt',
   });
 
   const response = await fetch(`https://openapi.tidal.com/v2/searchResults?${params}`, {
@@ -86,12 +101,26 @@ const searchTidalTracks = async (query) => {
 
   const tracks = included.filter((item) => item.type === 'tracks');
 
-  // Artists come back as separate included resources; build a lookup so we
-  // can resolve each track's artist relationship to an actual name.
+  // Artists, albums, and artwork all come back as separate included
+  // resources; build lookups so we can resolve each track's relationships.
   const artistsById = included
     .filter((item) => item.type === 'artists')
     .reduce((map, artist) => {
       map[artist.id] = artist.attributes?.name;
+      return map;
+    }, {});
+
+  const albumsById = included
+    .filter((item) => item.type === 'albums')
+    .reduce((map, album) => {
+      map[album.id] = album;
+      return map;
+    }, {});
+
+  const artworksById = included
+    .filter((item) => item.type === 'artworks')
+    .reduce((map, artwork) => {
+      map[artwork.id] = artwork;
       return map;
     }, {});
 
@@ -101,12 +130,17 @@ const searchTidalTracks = async (query) => {
       .map((ref) => artistsById[ref.id])
       .filter(Boolean);
 
+    const albumRef = track.relationships?.albums?.data?.[0];
+    const album = albumRef ? albumsById[albumRef.id] : null;
+    const coverArtRef = album?.relationships?.coverArt?.data?.[0];
+    const artwork = coverArtRef ? artworksById[coverArtRef.id] : null;
+
     return {
       source: 'tidal',
       externalId: track.id,
       title: track.attributes?.title || 'Unknown title',
       artist: artistNames.length > 0 ? artistNames.join(', ') : 'Unknown artist',
-      artworkUrl: null,
+      artworkUrl: artwork ? pickArtworkUrl(artwork) : null,
       trackUrl: `https://tidal.com/browse/track/${track.id}`,
       duration: parseIsoDurationToMs(track.attributes?.duration),
     };
