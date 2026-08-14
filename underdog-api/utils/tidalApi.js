@@ -30,10 +30,12 @@ const getTidalToken = async () => {
     body: new URLSearchParams({
       grant_type: 'client_credentials',
     }),
+    signal: AbortSignal.timeout(8000),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to get TIDAL access token');
+    const errorText = await response.text().catch(() => '');
+    throw new Error(`Failed to get TIDAL access token: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
@@ -59,10 +61,12 @@ const searchTidalTracks = async (query) => {
       Accept: 'application/vnd.tidal.v1+json',
       Authorization: `Bearer ${token}`,
     },
+    signal: AbortSignal.timeout(8000),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to search TIDAL tracks');
+    const errorText = await response.text().catch(() => '');
+    throw new Error(`Failed to search TIDAL tracks: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
