@@ -43,4 +43,9 @@ const itemSchema = new mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 
+// Prevents the same user from saving the same event twice. The controller
+// already returns a 409 for duplicates, but it relied on this index existing
+// without actually defining it.
+itemSchema.index({ owner: 1, url: 1 }, { unique: true });
+
 module.exports = mongoose.model('Item', itemSchema);

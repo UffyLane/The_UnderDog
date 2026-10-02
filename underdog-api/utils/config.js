@@ -5,7 +5,7 @@ const {
   PORT = 3000,
   MONGO_URI = 'mongodb://127.0.0.1:27017/underdog_db',
   JWT_SECRET,
-  TICKETMASTER_KEY,
+  TICKETMASTER_API_KEY,
 } = process.env;
 
 // In production, JWT_SECRET MUST exist
@@ -20,5 +20,5 @@ module.exports = {
   JWT_SECRET: NODE_ENV === 'production'
     ? JWT_SECRET
     : JWT_SECRET || 'dev-secret-key',
-  TICKETMASTER_KEY,
+  TICKETMASTER_API_KEY,
 };
