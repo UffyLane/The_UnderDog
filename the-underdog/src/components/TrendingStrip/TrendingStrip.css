@@ -1,0 +1,54 @@
+.trending {
+  margin-top: 26px;
+}
+
+.trending__header {
+  margin-bottom: 14px;
+}
+
+.trending__title {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.trending__subtitle {
+  margin: 6px 0 0;
+  color: rgba(233, 238, 245, 0.72);
+  font-size: 14px;
+}
+
+.trending__track {
+  margin: 0;
+  padding: 4px 4px 14px;
+  list-style: none;
+
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* EventCard (and its skeleton) render their own <li class="event">, so size
+   them directly rather than wrapping in another element — nesting an <li>
+   inside this one would be invalid HTML. */
+.trending__track > .event {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
+
+.trending__track::-webkit-scrollbar {
+  height: 8px;
+}
+
+.trending__track::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+@media (min-width: 640px) {
+  .trending__track > .event {
+    flex-basis: 320px;
+  }
+}

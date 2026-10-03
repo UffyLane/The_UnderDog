@@ -4,6 +4,8 @@ import EventList from "../../components/EventList/EventList";
 import TrackList from "../../components/TrackList/TrackList";
 import ErrorBanner from "../../components/ErrorBanner/ErrorBanner";
 import EventCardSkeleton from "../../components/EventCard/EventCardSkeleton";
+import HowItWorks from "../../components/HowItWorks/HowItWorks";
+import TrendingStrip from "../../components/TrendingStrip/TrendingStrip";
 import "./Home.css";
 
 export default function Home({
@@ -50,6 +52,21 @@ export default function Home({
         <div className="home__search-sticky">
           <SearchForm onSearch={onSearch} />
         </div>
+
+        {!artistName && (
+          <>
+            <HowItWorks />
+            <TrendingStrip
+              loggedIn={loggedIn}
+              onRequireAuth={onRequireAuth}
+              isEventSaved={isEventSaved}
+              onSaveEvent={onSaveEvent}
+              onUnsaveEvent={onUnsaveEvent}
+              savingKey={savingKey}
+              makeEventKey={makeEventKey}
+            />
+          </>
+        )}
 
         {errorMessage && <ErrorBanner message={errorMessage} />}
 
